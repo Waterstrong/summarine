@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.summarine.core.annotation.Bean;
 import org.summarine.core.definition.BeanDefinition;
+import org.summarine.core.handler.IHandler;
 import org.summarine.core.util.ReflectionUtil;
 
 public class DefaultBeanFactory implements IBeanFactory {
@@ -15,7 +16,7 @@ public class DefaultBeanFactory implements IBeanFactory {
 
     public DefaultBeanFactory() {
         this.beanCacheMap = new HashMap<>();
-        this.beanDefinitionMap = null;
+        this.beanDefinitionMap = new HashMap<>();
     }
 
     @Override
@@ -26,6 +27,17 @@ public class DefaultBeanFactory implements IBeanFactory {
         Object beanObject = createBean(beanName);
         registerBeanToCache(beanName, beanObject);
         return beanObject;
+    }
+
+    @Override
+    public void registerBeanDefinition(String beanResource, String handlerName) {
+        IHandler handler = (IHandler) ReflectionUtil.getInstance(handlerName);
+        beanDefinitionMap.putAll(handler.convert(beanResource));
+    }
+
+    @Override
+    public BeanDefinition getBeanDefinition(String beanName) {
+        return (BeanDefinition) beanDefinitionMap.get(beanName);
     }
 
     private void registerBeanToCache(String beanName, Object beanInstance) {

@@ -4,9 +4,10 @@ import org.summarine.core.annotation.Bean;
 
 @Bean(name = "worker")
 public class Worker {
+    @Bean(name = "smallShovel")
     private ITool tool;
 
-    public int weed() {
-        return tool.weed();
+    public String weed() {
+        return "I'm using the " + tool.using() + ", the weed is " + tool.weed() + ".";
     }
 }
