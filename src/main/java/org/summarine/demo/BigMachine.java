@@ -1,8 +1,8 @@
-package org.summarine.bean;
+package org.summarine.demo;
 
-import org.summarine.core.annotation.Bean;
+import org.summarine.core.annotation.Component;
 
-@Bean(name = "bigMachine")
+@Component
 public class BigMachine implements ITool {
     @Override
     public int weed() {

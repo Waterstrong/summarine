@@ -10,7 +10,7 @@ public class DefaultContainer implements IContainer {
 
     public DefaultContainer() {
         beanFactory = (IBeanFactory) ReflectionUtil.getInstance("org.summarine.core.factory.DefaultBeanFactory");
-        beanFactory.registerBeanDefinition("org.summarine.bean",  "org.summarine.core.handler.AnnotationHandler");
+        beanFactory.registerBeanDefinition("org.summarine.demo",  "org.summarine.core.handler.AnnotationHandler");
     }
 
     @Override

@@ -1,6 +1,6 @@
 package org.summarine.main;
 
-import org.summarine.bean.Worker;
+import org.summarine.demo.Worker;
 import org.summarine.core.container.DefaultContainer;
 
 public class Main {

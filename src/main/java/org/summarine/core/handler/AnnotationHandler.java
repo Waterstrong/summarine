@@ -7,7 +7,7 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.summarine.core.annotation.Bean;
+import org.summarine.core.annotation.Component;
 import org.summarine.core.definition.BeanDefinition;
 import org.summarine.core.util.ReflectionUtil;
 
@@ -33,8 +33,8 @@ public class AnnotationHandler implements IHandler {
                     Object instance = ReflectionUtil.getInstance(fullName);
                     // TODO: use interface to handle different annotations
                     if (hasAnnotation(instance)) {
-                        Bean bean = instance.getClass().getAnnotation(Bean.class);
-                        beanMap.put(bean.name(), new BeanDefinition(bean.name(), fullName));
+                        Component bean = instance.getClass().getAnnotation(Component.class);
+                        beanMap.put(bean.value(), new BeanDefinition(bean.value(), fullName));
                     }
                 }
             }
@@ -45,6 +45,6 @@ public class AnnotationHandler implements IHandler {
     }
 
     private boolean hasAnnotation(Object instance) {
-        return instance != null && instance.getClass().isAnnotationPresent(Bean.class);
+        return instance != null && instance.getClass().isAnnotationPresent(Component.class);
     }
 }
