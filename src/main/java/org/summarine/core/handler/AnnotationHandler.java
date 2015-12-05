@@ -30,11 +30,9 @@ public class AnnotationHandler implements IHandler {
                 for (String className : classNames) {
                     className = className.substring(0, className.lastIndexOf(DOT_CHAR));
                     String fullName = beanPackage + DOT_CHAR + className;
-                    Object instance = ReflectionUtil.getInstance(fullName);
-                    // TODO: use interface to handle different annotations
-                    if (hasAnnotation(instance)) {
-                        Component bean = instance.getClass().getAnnotation(Component.class);
-                        beanMap.put(bean.value(), new BeanDefinition(bean.value(), fullName));
+                    if (hasAnnotation(ReflectionUtil.getClass(fullName))) {
+                        String key = className.toLowerCase();
+                        beanMap.put(key, new BeanDefinition(key, fullName));
                     }
                 }
             }
@@ -44,7 +42,8 @@ public class AnnotationHandler implements IHandler {
         return beanMap;
     }
 
-    private boolean hasAnnotation(Object instance) {
-        return instance != null && instance.getClass().isAnnotationPresent(Component.class);
+    // TODO: use interface to handle different annotations
+    private boolean hasAnnotation(Class<?> clazz) {
+        return clazz != null && clazz.isAnnotationPresent(Component.class);
     }
 }
