@@ -34,6 +34,11 @@ public class DefaultBeanFactory implements IBeanFactory {
     public void registerBeanDefinition(String beanResource, String handlerName) {
         IHandler handler = (IHandler) ReflectionUtil.getInstance(handlerName);
         beanDefinitionMap.putAll(handler.convert(beanResource));
+        loadBeanConfiguration();
+    }
+
+    private void loadBeanConfiguration() {
+
     }
 
     @Override
@@ -50,18 +55,24 @@ public class DefaultBeanFactory implements IBeanFactory {
         Object instance = ReflectionUtil.getInstance(beanDefinition.getType());
         Field[] fields = instance.getClass().getDeclaredFields();
         for (Field field : fields) {
-            Autowired autowired = field.getAnnotation(Autowired.class);
-            if(autowired == null) {
-                continue;
-            }
+            autowireField(instance, field);
+        }
+        return instance;
+    }
+
+    private void autowireField(Object instance, Field field) {
+        if (hasAnnotation(field)) {
             field.setAccessible(true);
             try {
-                field.set(instance, getBean(autowired.value()));
+                field.set(instance, getBean(field.getType().getSimpleName()));
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             }
         }
-        return instance;
+    }
+
+    private boolean hasAnnotation(Field field) {
+        return field.isAnnotationPresent(Autowired.class);
     }
 
     private Object getBeanFromCache(String beanName) {

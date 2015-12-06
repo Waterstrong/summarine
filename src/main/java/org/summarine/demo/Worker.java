@@ -6,7 +6,7 @@ import org.summarine.core.annotation.Component;
 @Component
 public class Worker {
 
-    @Autowired(value = "bigMachine")
+    @Autowired
     private ITool tool;
 
     public String weed() {
