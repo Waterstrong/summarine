@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.summarine.core.annotation.Autowired;
-import org.summarine.core.annotation.Bean;
 import org.summarine.core.definition.BeanDefinition;
 import org.summarine.core.handler.IHandler;
 import org.summarine.core.util.ReflectionUtil;
@@ -51,8 +50,9 @@ public class DefaultBeanFactory implements IBeanFactory {
     }
 
     private Object createBean(String beanName) {
-        BeanDefinition beanDefinition = (BeanDefinition) beanDefinitionMap.get(beanName.toLowerCase());
-        Object instance = ReflectionUtil.getInstance(beanDefinition.getType());
+        BeanDefinition beanDefinition = (BeanDefinition) beanDefinitionMap.get(beanName);
+        Object beanValue = beanDefinition.getValue();
+        Object instance = beanValue != null ? beanValue : ReflectionUtil.getInstance(beanDefinition.getType());
         Field[] fields = instance.getClass().getDeclaredFields();
         for (Field field : fields) {
             autowireField(instance, field);
@@ -64,7 +64,8 @@ public class DefaultBeanFactory implements IBeanFactory {
         if (hasAnnotation(field)) {
             field.setAccessible(true);
             try {
-                field.set(instance, getBean(field.getType().getSimpleName()));
+                String fieldName = field.getName().toLowerCase();
+                field.set(instance, getBean(fieldName));
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             }

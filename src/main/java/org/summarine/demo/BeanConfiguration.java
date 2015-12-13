@@ -7,21 +7,21 @@ import org.summarine.core.annotation.Configuration;
 public class BeanConfiguration {
 
     @Bean
-    public ITool buildSmallShovel() {return new SmallShovel(); }
+    public ITool smallShovel() {return new SmallShovel(); }
 
     @Bean
-    public ITool buildBigMachine() {
+    public ITool bigMachine() {
         return new BigMachine();
     }
 
     @Bean
-    public IVolume buildMuteVolume() {
+    public IVolume muteVolume() {
         return new Mute();
     }
 
     @Bean
-    public IVolume buildNotMuteVolume() {
-        return new NotMute();
+    public IVolume notMuteVolume() {
+        return new Sound(5);
     }
 
 }

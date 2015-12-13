@@ -10,8 +10,16 @@ public class BeanDefinition {
         this.type = type;
     }
 
+    public BeanDefinition(String simpleName, String typeName, Object value) {
+        this(simpleName, typeName);
+        this.value = value;
+    }
 
     public String getType() {
         return type;
+    }
+
+    public Object getValue() {
+        return value;
     }
 }

@@ -6,7 +6,7 @@ import org.summarine.core.annotation.Component;
 @Component
 public class BigMachine implements ITool {
     @Autowired
-    private IVolume volume;
+    private IVolume notMuteVolume;
 
     @Override
     public int weed() {
@@ -15,6 +15,6 @@ public class BigMachine implements ITool {
 
     @Override
     public String using() {
-        return "big machine " + volume.play();
+        return "big machine " + notMuteVolume.play();
     }
 }

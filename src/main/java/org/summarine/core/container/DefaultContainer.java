@@ -15,7 +15,7 @@ public class DefaultContainer implements IContainer {
 
     @Override
     public Object getBean(String beanName) {
-        return beanFactory.getBean(beanName);
+        return beanFactory.getBean(beanName.toLowerCase());
     }
 
     @Override

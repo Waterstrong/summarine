@@ -7,9 +7,9 @@ import org.summarine.core.annotation.Component;
 public class Worker {
 
     @Autowired
-    private ITool tool;
+    private ITool bigMachine;
 
     public String weed() {
-        return "I'm using the " + tool.using() + ", the weed is " + tool.weed() + ".";
+        return "I'm using the " + bigMachine.using() + ", the weed is " + bigMachine.weed() + ".";
     }
 }

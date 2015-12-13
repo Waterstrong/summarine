@@ -2,7 +2,6 @@ package org.summarine.core.handler;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
@@ -46,12 +45,11 @@ public class AnnotationHandler implements IHandler {
                     } else if(clazz.isAnnotationPresent(Configuration.class)) { // TODO split the logic
                         Method[] methods = clazz.getDeclaredMethods();
                         for (Method method : methods) {
-                            if(method.isAnnotationPresent(Bean.class)) {
-                                String returnType = method.getReturnType().getSimpleName().toLowerCase();
+                                if(method.isAnnotationPresent(Bean.class)) {
                                 try {
-                                    Class<?> aClass = method.invoke(ReflectionUtil.getInstance(fullName)).getClass();
-                                    beanMap.put(returnType, new BeanDefinition(aClass.getSimpleName(), aClass.getTypeName()));
-                                    int a = 3;
+                                    Object instance = method.invoke(ReflectionUtil.getInstance(fullName));
+                                    String methodName = method.getName().toLowerCase();
+                                    beanMap.put(methodName, new BeanDefinition(methodName, instance.getClass().getTypeName(), instance));
                                 } catch (IllegalAccessException e) {
                                     e.printStackTrace();
                                 } catch (InvocationTargetException e) {

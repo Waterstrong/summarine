@@ -1,5 +1,8 @@
 package org.summarine.demo;
 
+import org.summarine.core.annotation.Component;
+
+@Component
 public class Mute extends IVolume {
 
     @Override
