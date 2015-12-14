@@ -6,6 +6,7 @@ public class BeanDefinition {
     private String name;
     private String type;
     private Object value;
+    private String beanName;
 
     public BeanDefinition(String name, String type) {
         this.name = name;
@@ -22,5 +23,9 @@ public class BeanDefinition {
             value = ReflectionUtil.getInstance(type);
         }
         return value;
+    }
+
+    public String getName() {
+        return name;
     }
 }

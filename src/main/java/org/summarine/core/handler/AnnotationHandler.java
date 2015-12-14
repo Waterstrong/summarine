@@ -52,8 +52,8 @@ public class AnnotationHandler implements IHandler {
         Class<?> clazz = ReflectionUtil.getClass(fullName);
 
         if (hasComponentAnnotation(clazz)) {
-            String key = className.toLowerCase();
-            beanMap.put(key, new BeanDefinition(key, fullName));
+            BeanDefinition beanDefinition = new BeanDefinition(className.toLowerCase(), fullName);
+            beanMap.put(beanDefinition.getName(), beanDefinition);
         } else if (hasConfigurationAnnotation(clazz)) { // TODO split the logic
             List<Method> methods = Arrays.asList(clazz.getDeclaredMethods());
             methods.forEach(method -> beanMap.putAll(handleBeanMethod(fullName, method)));
@@ -66,8 +66,8 @@ public class AnnotationHandler implements IHandler {
         if (hasBeanAnnotation(method)) {
             try {
                 Object instance = method.invoke(ReflectionUtil.getInstance(fullName));
-                String beanName = extractBeanName(method);
-                beanMap.put(beanName, new BeanDefinition(beanName, instance));
+                BeanDefinition beanDefinition = new BeanDefinition(extractBeanName(method), instance);
+                beanMap.put(beanDefinition.getName(), beanDefinition);
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             } catch (InvocationTargetException e) {
@@ -83,11 +83,11 @@ public class AnnotationHandler implements IHandler {
     }
 
     private boolean hasBeanAnnotation(Method method) {
-        return method.isAnnotationPresent(Bean.class);
+        return method != null && method.isAnnotationPresent(Bean.class);
     }
 
     private boolean hasConfigurationAnnotation(Class<?> clazz) {
-        return clazz.isAnnotationPresent(Configuration.class);
+        return clazz != null && clazz.isAnnotationPresent(Configuration.class);
     }
 
     private String buildFullClassName(String beanPackage, String className) {
