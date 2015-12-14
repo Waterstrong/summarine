@@ -48,8 +48,8 @@ public class AnnotationHandler implements IHandler {
                                 if(method.isAnnotationPresent(Bean.class)) {
                                 try {
                                     Object instance = method.invoke(ReflectionUtil.getInstance(fullName));
-                                    String methodName = method.getName().toLowerCase();
-                                    beanMap.put(methodName, new BeanDefinition(methodName, instance.getClass().getTypeName(), instance));
+                                    String methodName = method.getName().toLowerCase(); // TODO
+                                    beanMap.put(methodName, new BeanDefinition(methodName, instance));
                                 } catch (IllegalAccessException e) {
                                     e.printStackTrace();
                                 } catch (InvocationTargetException e) {

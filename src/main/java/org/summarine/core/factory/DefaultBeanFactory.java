@@ -51,8 +51,7 @@ public class DefaultBeanFactory implements IBeanFactory {
 
     private Object createBean(String beanName) {
         BeanDefinition beanDefinition = (BeanDefinition) beanDefinitionMap.get(beanName);
-        Object beanValue = beanDefinition.getValue();
-        Object instance = beanValue != null ? beanValue : ReflectionUtil.getInstance(beanDefinition.getType());
+        Object instance = beanDefinition.getBeanInstance();
         Field[] fields = instance.getClass().getDeclaredFields();
         for (Field field : fields) {
             autowireField(instance, field);

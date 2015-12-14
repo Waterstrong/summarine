@@ -1,5 +1,7 @@
 package org.summarine.core.definition;
 
+import org.summarine.core.util.ReflectionUtil;
+
 public class BeanDefinition {
     private String name;
     private String type;
@@ -10,16 +12,15 @@ public class BeanDefinition {
         this.type = type;
     }
 
-    public BeanDefinition(String simpleName, String typeName, Object value) {
-        this(simpleName, typeName);
+    public BeanDefinition(String name, Object value) {
+        this.name = name;
         this.value = value;
     }
 
-    public String getType() {
-        return type;
-    }
-
-    public Object getValue() {
+    public Object getBeanInstance() {
+        if(value == null) {
+            value = ReflectionUtil.getInstance(type);
+        }
         return value;
     }
 }
