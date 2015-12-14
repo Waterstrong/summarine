@@ -39,6 +39,8 @@ public class AnnotationHandler implements IHandler {
         return beanMap;
     }
 
+//    protected abstract BeanDefinition generateBeanDefinition();
+
     private Map<String, Object> extractFromClsNames(String beanPackage, List<String> classNames) {
         Map<String, Object> beanMap = new HashMap<>();
         classNames.stream().forEach(className -> beanMap.putAll(handleClassName(beanPackage, className)));
