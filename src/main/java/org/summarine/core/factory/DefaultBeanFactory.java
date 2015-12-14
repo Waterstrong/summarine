@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.summarine.core.annotation.Autowired;
+import org.summarine.core.annotation.Qualifier;
 import org.summarine.core.definition.BeanDefinition;
 import org.summarine.core.handler.IHandler;
 import org.summarine.core.util.ReflectionUtil;
@@ -61,12 +62,16 @@ public class DefaultBeanFactory implements IBeanFactory {
         if (hasAutowiredAnnotation(field)) {
             field.setAccessible(true);
             try {
-                String fieldName = field.getName().toLowerCase();
-                field.set(instance, getBean(fieldName));
+                field.set(instance, getBean(extractQualifierValue(field)));
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             }
         }
+    }
+
+    private String extractQualifierValue(Field field) {
+        return (field.isAnnotationPresent(Qualifier.class) ?
+                field.getAnnotation(Qualifier.class).value() : field.getName()).toLowerCase();
     }
 
     private boolean hasAutowiredAnnotation(Field field) {

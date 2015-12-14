@@ -41,36 +41,53 @@ public class AnnotationHandler implements IHandler {
 
     private Map<String, Object> extractFromClsNames(String beanPackage, List<String> classNames) {
         Map<String, Object> beanMap = new HashMap<>();
-        // TODO: use java8 feature
-        for (String className : classNames) {
-            className = removeClassSuffix(className);
-            String fullName = buildFullClassName(beanPackage, className);
-            Class<?> clazz = ReflectionUtil.getClass(fullName);
-            // TODO: ignore interface component annotation
-            if(clazz.isInterface()) {
-               continue;
-            }
-            if (hasAnnotation(clazz)) {
-                String key = className.toLowerCase();
-                beanMap.put(key, new BeanDefinition(key, fullName));
-            } else if(clazz.isAnnotationPresent(Configuration.class)) { // TODO split the logic
-                Method[] methods = clazz.getDeclaredMethods();
-                for (Method method : methods) {
-                        if(method.isAnnotationPresent(Bean.class)) {
-                        try {
-                            Object instance = method.invoke(ReflectionUtil.getInstance(fullName));
-                            String methodName = method.getName().toLowerCase(); // TODO
-                            beanMap.put(methodName, new BeanDefinition(methodName, instance));
-                        } catch (IllegalAccessException e) {
-                            e.printStackTrace();
-                        } catch (InvocationTargetException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
+        classNames.stream().forEach(className -> beanMap.putAll(handleClassName(beanPackage, className)));
+        return beanMap;
+    }
+
+    private Map<String, Object> handleClassName(String beanPackage, String className) {
+        Map<String, Object> beanMap = new HashMap<>();
+        className = removeClassSuffix(className);
+        String fullName = buildFullClassName(beanPackage, className);
+        Class<?> clazz = ReflectionUtil.getClass(fullName);
+
+        if (hasComponentAnnotation(clazz)) {
+            String key = className.toLowerCase();
+            beanMap.put(key, new BeanDefinition(key, fullName));
+        } else if (hasConfigurationAnnotation(clazz)) { // TODO split the logic
+            List<Method> methods = Arrays.asList(clazz.getDeclaredMethods());
+            methods.forEach(method -> beanMap.putAll(handleBeanMethod(fullName, method)));
+        }
+        return beanMap;
+    }
+
+    private Map<String, Object> handleBeanMethod(String fullName, Method method) {
+        Map<String, Object> beanMap = new HashMap<>();
+        if (hasBeanAnnotation(method)) {
+            try {
+                Object instance = method.invoke(ReflectionUtil.getInstance(fullName));
+                String beanName = extractBeanName(method);
+                beanMap.put(beanName, new BeanDefinition(beanName, instance));
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
             }
         }
         return beanMap;
+    }
+
+    private String extractBeanName(Method method) {
+        String beanName = method.getAnnotation(Bean.class).name();
+        return (beanName.isEmpty() ? method.getName() : beanName).toLowerCase();
+    }
+
+    private boolean hasBeanAnnotation(Method method) {
+        return method.isAnnotationPresent(Bean.class);
+    }
+
+    private boolean hasConfigurationAnnotation(Class<?> clazz) {
+        return clazz.isAnnotationPresent(Configuration.class);
     }
 
     private String buildFullClassName(String beanPackage, String className) {
@@ -82,7 +99,7 @@ public class AnnotationHandler implements IHandler {
     }
 
     // TODO: use interface to handle different annotations
-    private boolean hasAnnotation(Class<?> clazz) {
+    private boolean hasComponentAnnotation(Class<?> clazz) {
         return clazz != null && clazz.isAnnotationPresent(Component.class);
     }
 }

@@ -6,10 +6,10 @@ import org.summarine.core.annotation.Configuration;
 @Configuration
 public class BeanConfiguration {
 
-    @Bean
-    public ITool smallShovel() {return new SmallShovel(); }
+//    @Bean
+//    public ITool smallShovel() {return new SmallShovel(); }
 
-    @Bean
+    @Bean(name = "bigMachine")
     public ITool bigMachine() {
         return new BigMachine();
     }
