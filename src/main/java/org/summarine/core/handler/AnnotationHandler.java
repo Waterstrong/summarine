@@ -5,8 +5,10 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.summarine.core.annotation.Bean;
@@ -29,39 +31,44 @@ public class AnnotationHandler implements IHandler {
             while (directories.hasMoreElements()) {
                 URL url = directories.nextElement();
                 File file = new File(url.getFile());
-                String[] classNames = file.list();
-                // TODO: use java8 feature
-                for (String className : classNames) {
-                    className = removeClassSuffix(className);
-                    String fullName = buildFullClassName(beanPackage, className);
-                    Class<?> clazz = ReflectionUtil.getClass(fullName);
-                    // TODO: ignore interface component annotation
-                    if(clazz.isInterface()) {
-                       continue;
-                    }
-                    if (hasAnnotation(clazz)) {
-                        String key = className.toLowerCase();
-                        beanMap.put(key, new BeanDefinition(key, fullName));
-                    } else if(clazz.isAnnotationPresent(Configuration.class)) { // TODO split the logic
-                        Method[] methods = clazz.getDeclaredMethods();
-                        for (Method method : methods) {
-                                if(method.isAnnotationPresent(Bean.class)) {
-                                try {
-                                    Object instance = method.invoke(ReflectionUtil.getInstance(fullName));
-                                    String methodName = method.getName().toLowerCase(); // TODO
-                                    beanMap.put(methodName, new BeanDefinition(methodName, instance));
-                                } catch (IllegalAccessException e) {
-                                    e.printStackTrace();
-                                } catch (InvocationTargetException e) {
-                                    e.printStackTrace();
-                                }
-                            }
+                beanMap.putAll(extractFromClsNames(beanPackage, Arrays.asList(file.list())));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return beanMap;
+    }
+
+    private Map<String, Object> extractFromClsNames(String beanPackage, List<String> classNames) {
+        Map<String, Object> beanMap = new HashMap<>();
+        // TODO: use java8 feature
+        for (String className : classNames) {
+            className = removeClassSuffix(className);
+            String fullName = buildFullClassName(beanPackage, className);
+            Class<?> clazz = ReflectionUtil.getClass(fullName);
+            // TODO: ignore interface component annotation
+            if(clazz.isInterface()) {
+               continue;
+            }
+            if (hasAnnotation(clazz)) {
+                String key = className.toLowerCase();
+                beanMap.put(key, new BeanDefinition(key, fullName));
+            } else if(clazz.isAnnotationPresent(Configuration.class)) { // TODO split the logic
+                Method[] methods = clazz.getDeclaredMethods();
+                for (Method method : methods) {
+                        if(method.isAnnotationPresent(Bean.class)) {
+                        try {
+                            Object instance = method.invoke(ReflectionUtil.getInstance(fullName));
+                            String methodName = method.getName().toLowerCase(); // TODO
+                            beanMap.put(methodName, new BeanDefinition(methodName, instance));
+                        } catch (IllegalAccessException e) {
+                            e.printStackTrace();
+                        } catch (InvocationTargetException e) {
+                            e.printStackTrace();
                         }
                     }
                 }
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
         return beanMap;
     }

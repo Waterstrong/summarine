@@ -10,7 +10,7 @@ public class BeanDefinitionTest {
         HelloWorld helloWorld = new HelloWorld();
         BeanDefinition beanDefinition = new BeanDefinition("helloWorld", helloWorld);
 
-        HelloWorld beanInstance = (HelloWorld) beanDefinition.getBeanInstance();
+        Object beanInstance = beanDefinition.getBeanInstance();
 
         assertEquals(helloWorld, beanInstance);
     }

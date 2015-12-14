@@ -1,7 +1,9 @@
 package org.summarine.core.factory;
 
 import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.summarine.core.annotation.Autowired;
@@ -33,11 +35,6 @@ public class DefaultBeanFactory implements IBeanFactory {
     public void registerBeanDefinition(String beanResource, String handlerName) {
         IHandler handler = (IHandler) ReflectionUtil.getInstance(handlerName);
         beanDefinitionMap.putAll(handler.convert(beanResource));
-        loadBeanConfiguration();
-    }
-
-    private void loadBeanConfiguration() {
-
     }
 
     @Override
@@ -50,17 +47,18 @@ public class DefaultBeanFactory implements IBeanFactory {
     }
 
     private Object createBean(String beanName) {
-        BeanDefinition beanDefinition = (BeanDefinition) beanDefinitionMap.get(beanName);
-        Object instance = beanDefinition.getBeanInstance();
-        Field[] fields = instance.getClass().getDeclaredFields();
-        for (Field field : fields) {
-            autowireField(instance, field);
-        }
+        Object instance = ((BeanDefinition) beanDefinitionMap.get(beanName)).getBeanInstance();
+        handleField(instance);
         return instance;
     }
 
+    private void handleField(Object instance) {
+        List<Field> fields = Arrays.asList(instance.getClass().getDeclaredFields());
+        fields.stream().forEach(field -> autowireField(instance, field));
+    }
+
     private void autowireField(Object instance, Field field) {
-        if (hasAnnotation(field)) {
+        if (hasAutowiredAnnotation(field)) {
             field.setAccessible(true);
             try {
                 String fieldName = field.getName().toLowerCase();
@@ -71,7 +69,7 @@ public class DefaultBeanFactory implements IBeanFactory {
         }
     }
 
-    private boolean hasAnnotation(Field field) {
+    private boolean hasAutowiredAnnotation(Field field) {
         return field.isAnnotationPresent(Autowired.class);
     }
 
@@ -83,4 +81,7 @@ public class DefaultBeanFactory implements IBeanFactory {
         return beanCacheMap.containsKey(beanName);
     }
 
+    public void setBeanDefinitionMap(Map<String, Object> beanDefinitionMap) {
+        this.beanDefinitionMap = beanDefinitionMap;
+    }
 }
