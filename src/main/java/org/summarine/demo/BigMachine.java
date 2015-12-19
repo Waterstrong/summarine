@@ -1,11 +1,11 @@
 package org.summarine.demo;
 
-import org.summarine.core.annotation.Autowired;
-import org.summarine.core.annotation.Component;
+import org.summarine.core.annotation.Inject;
+import org.summarine.core.annotation.MyComponent;
 
-@Component
+@MyComponent
 public class BigMachine implements ITool {
-    @Autowired
+    @Inject
     private IVolume notMuteVolume;
 
     @Override

@@ -1,7 +1,7 @@
 package org.summarine.core.handler;
 
-import org.summarine.core.annotation.Component;
+import org.summarine.core.annotation.MyComponent;
 
-@Component
+@MyComponent
 public class StubComponentAnt {
 }

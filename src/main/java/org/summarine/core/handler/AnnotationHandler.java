@@ -11,9 +11,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.summarine.core.annotation.Bean;
-import org.summarine.core.annotation.Component;
-import org.summarine.core.annotation.Configuration;
+import org.summarine.core.annotation.MyBean;
+import org.summarine.core.annotation.MyComponent;
+import org.summarine.core.annotation.MyConfiguration;
 import org.summarine.core.definition.BeanDefinition;
 import org.summarine.core.util.ReflectionUtil;
 
@@ -54,7 +54,7 @@ public class AnnotationHandler implements IHandler {
         Class<?> clazz = ReflectionUtil.getClass(fullName);
 
         if (hasComponentAnnotation(clazz)) {
-            BeanDefinition beanDefinition = new BeanDefinition(className.toLowerCase(), fullName);
+            BeanDefinition beanDefinition = BeanDefinition.createByType(className.toLowerCase(), fullName);
             beanMap.put(beanDefinition.getName(), beanDefinition);
         } else if (hasConfigurationAnnotation(clazz)) { // TODO split the logic
             List<Method> methods = Arrays.asList(clazz.getDeclaredMethods());
@@ -68,7 +68,7 @@ public class AnnotationHandler implements IHandler {
         if (hasBeanAnnotation(method)) {
             try {
                 Object instance = method.invoke(ReflectionUtil.getInstance(fullName));
-                BeanDefinition beanDefinition = new BeanDefinition(extractBeanName(method), instance);
+                BeanDefinition beanDefinition = BeanDefinition.createByValue(extractBeanName(method), instance);
                 beanMap.put(beanDefinition.getName(), beanDefinition);
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
@@ -80,16 +80,16 @@ public class AnnotationHandler implements IHandler {
     }
 
     private String extractBeanName(Method method) {
-        String beanName = method.getAnnotation(Bean.class).name();
+        String beanName = method.getAnnotation(MyBean.class).name();
         return (beanName.isEmpty() ? method.getName() : beanName).toLowerCase();
     }
 
     private boolean hasBeanAnnotation(Method method) {
-        return method != null && method.isAnnotationPresent(Bean.class);
+        return method != null && method.isAnnotationPresent(MyBean.class);
     }
 
     private boolean hasConfigurationAnnotation(Class<?> clazz) {
-        return clazz != null && clazz.isAnnotationPresent(Configuration.class);
+        return clazz != null && clazz.isAnnotationPresent(MyConfiguration.class);
     }
 
     private String buildFullClassName(String beanPackage, String className) {
@@ -102,6 +102,6 @@ public class AnnotationHandler implements IHandler {
 
     // TODO: use interface to handle different annotations
     private boolean hasComponentAnnotation(Class<?> clazz) {
-        return clazz != null && clazz.isAnnotationPresent(Component.class);
+        return clazz != null && clazz.isAnnotationPresent(MyComponent.class);
     }
 }

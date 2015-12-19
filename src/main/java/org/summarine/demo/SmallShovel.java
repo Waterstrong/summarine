@@ -1,8 +1,8 @@
 package org.summarine.demo;
 
-import org.summarine.core.annotation.Component;
+import org.summarine.core.annotation.MyComponent;
 
-@Component
+@MyComponent
 public class SmallShovel implements ITool {
     @Override
     public int weed() {

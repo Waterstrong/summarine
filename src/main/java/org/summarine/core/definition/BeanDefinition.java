@@ -6,17 +6,28 @@ public class BeanDefinition {
     private String name;
     private String type;
     private Object value;
-    private String beanName;
 
-    public BeanDefinition(String name, String type) {
+    private BeanDefinition() {
+    }
+
+    private BeanDefinition(String name, String type) {
         this.name = name;
         this.type = type;
     }
 
-    public BeanDefinition(String name, Object value) {
+    private BeanDefinition(String name, Object value) {
         this.name = name;
         this.value = value;
     }
+
+    public static BeanDefinition createByType(String name, String type) {
+        return new BeanDefinition(name, type);
+    }
+
+    public static BeanDefinition createByValue(String name, Object value) {
+        return new BeanDefinition(name, value);
+    }
+
 
     public Object getBeanInstance() {
         if(value == null) {

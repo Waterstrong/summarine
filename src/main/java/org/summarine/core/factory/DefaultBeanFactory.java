@@ -6,8 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.summarine.core.annotation.Autowired;
-import org.summarine.core.annotation.Qualifier;
+import org.summarine.core.annotation.Inject;
+import org.summarine.core.annotation.MyQualifier;
 import org.summarine.core.definition.BeanDefinition;
 import org.summarine.core.handler.IHandler;
 import org.summarine.core.util.ReflectionUtil;
@@ -70,12 +70,12 @@ public class DefaultBeanFactory implements IBeanFactory {
     }
 
     private String extractQualifierValue(Field field) {
-        return (field.isAnnotationPresent(Qualifier.class) ?
-                field.getAnnotation(Qualifier.class).value() : field.getName()).toLowerCase();
+        return (field.isAnnotationPresent(MyQualifier.class) ?
+                field.getAnnotation(MyQualifier.class).value() : field.getName()).toLowerCase();
     }
 
     private boolean hasAutowiredAnnotation(Field field) {
-        return field.isAnnotationPresent(Autowired.class);
+        return field.isAnnotationPresent(Inject.class);
     }
 
     private Object getBeanFromCache(String beanName) {

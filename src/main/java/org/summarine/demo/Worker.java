@@ -1,14 +1,14 @@
 package org.summarine.demo;
 
-import org.summarine.core.annotation.Autowired;
-import org.summarine.core.annotation.Component;
-import org.summarine.core.annotation.Qualifier;
+import org.summarine.core.annotation.Inject;
+import org.summarine.core.annotation.MyComponent;
+import org.summarine.core.annotation.MyQualifier;
 
-@Component
+@MyComponent
 public class Worker {
 
-    @Autowired
-    @Qualifier("bigMachine")
+    @Inject
+    @MyQualifier("bigMachine")
     private ITool tool;
 
     public String weed() {

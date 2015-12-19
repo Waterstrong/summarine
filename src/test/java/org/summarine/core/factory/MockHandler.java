@@ -11,7 +11,7 @@ public class MockHandler implements IHandler {
     public Map<String, Object> convert(String resource) {
         Map<String, Object> map = new HashMap<>();
         if(resource == "resource")
-        map.put("object", new BeanDefinition("object", "type"));
+        map.put("object", BeanDefinition.createByType("object", "type"));
         return map;
     }
 }

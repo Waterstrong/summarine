@@ -1,12 +1,12 @@
 package org.summarine.core.handler;
 
-import org.summarine.core.annotation.Bean;
-import org.summarine.core.annotation.Configuration;
+import org.summarine.core.annotation.MyBean;
+import org.summarine.core.annotation.MyConfiguration;
 import org.summarine.core.definition.HelloWorld;
 
-@Configuration
+@MyConfiguration
 public class StubConfigurationAndBeanAnt {
-    @Bean
+    @MyBean
     public HelloWorld helloWorld() {
         return new HelloWorld();
     }

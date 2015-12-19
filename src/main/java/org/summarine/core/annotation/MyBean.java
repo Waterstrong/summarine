@@ -6,8 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
-@Component
-public @interface Configuration {
-    String value() default "";
+@Target({ElementType.METHOD, ElementType.ANNOTATION_TYPE, ElementType.FIELD})
+public @interface MyBean {
+    String name() default "";
 }

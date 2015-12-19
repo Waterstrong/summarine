@@ -8,7 +8,7 @@ public class BeanDefinitionTest {
     @Test
     public void should_get_object_instance_when_given_bean_value() {
         HelloWorld helloWorld = new HelloWorld();
-        BeanDefinition beanDefinition = new BeanDefinition("helloWorld", helloWorld);
+        BeanDefinition beanDefinition = BeanDefinition.createByValue("helloWorld", helloWorld);
 
         Object beanInstance = beanDefinition.getBeanInstance();
 
@@ -17,7 +17,7 @@ public class BeanDefinitionTest {
 
     @Test
     public void should_get_object_instance_by_type_when_given_bean_type() {
-        BeanDefinition beanDefinition = new BeanDefinition("helloWorld", "org.summarine.core.definition.HelloWorld");
+        BeanDefinition beanDefinition = BeanDefinition.createByType("helloWorld", "org.summarine.core.definition.HelloWorld");
 
         Object beanInstance = beanDefinition.getBeanInstance();
 
@@ -26,7 +26,7 @@ public class BeanDefinitionTest {
 
     @Test(expected = Exception.class)
     public void should_throw_exception_when_not_found_bean() {
-        BeanDefinition beanDefinition = new BeanDefinition("notFound", "NotFound");
+        BeanDefinition beanDefinition = BeanDefinition.createByType("notFound", "NotFound");
 
         beanDefinition.getBeanInstance();
     }
