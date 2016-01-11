@@ -6,21 +6,21 @@ import org.mockito.cglib.proxy.MethodInterceptor;
 import org.mockito.cglib.proxy.MethodProxy;
 import org.summarine.core.annotation.MyAspect;
 
-public class MyCaller implements MethodInterceptor {
+public class MyCallerProxy implements MethodInterceptor {
 
-    private IAspect advice;
+    private IAspect aspect;
 
-    public MyCaller(IAspect advice) {
-        this.advice = advice;
+    public MyCallerProxy(IAspect aspect) {
+        this.aspect = aspect;
     }
 
     @Override
     public Object intercept(Object obj, Method method, Object[] args, MethodProxy proxy) throws Throwable {
         if (obj.getClass().getSuperclass().isAnnotationPresent(MyAspect.class) ||
                 method.isAnnotationPresent(MyAspect.class)) {
-            this.advice.before();
+            this.aspect.before();
             Object result = proxy.invokeSuper(obj, args);
-            this.advice.after();
+            this.aspect.after();
             return result;
         }
         return proxy.invokeSuper(obj, args);
