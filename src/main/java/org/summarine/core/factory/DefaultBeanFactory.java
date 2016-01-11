@@ -62,7 +62,7 @@ public class DefaultBeanFactory implements IBeanFactory {
         Class<?> clazz = instance.getClass();
         List<Method> methods = Arrays.asList(clazz.getDeclaredMethods());
         if(hasAspectAnnotation(methods)) {
-            IAspect advice = (IAspect) ReflectionUtil.getInstance("org.summarine.logging.LoggingAdvice");
+            IAspect advice = (IAspect) ReflectionUtil.getInstance("org.summarine.logging.LoggingAspect");
             MyCaller caller = new MyCaller();
             caller.setAdvice(advice);
 
