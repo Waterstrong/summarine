@@ -6,11 +6,11 @@ import org.mockito.cglib.proxy.MethodInterceptor;
 import org.mockito.cglib.proxy.MethodProxy;
 import org.summarine.core.annotation.MyAspect;
 
-public class MyCallerProxy implements MethodInterceptor {
+public class CallerProxy implements MethodInterceptor {
 
     private IAspect aspect;
 
-    public MyCallerProxy(IAspect aspect) {
+    public CallerProxy(IAspect aspect) {
         this.aspect = aspect;
     }
 

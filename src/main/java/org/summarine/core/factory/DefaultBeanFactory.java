@@ -11,7 +11,7 @@ import org.mockito.cglib.proxy.Enhancer;
 import org.summarine.core.annotation.Inject;
 import org.summarine.core.annotation.MyAspect;
 import org.summarine.core.annotation.MyQualifier;
-import org.summarine.core.aop.MyCallerProxy;
+import org.summarine.core.aop.CallerProxy;
 import org.summarine.core.definition.BeanDefinition;
 import org.summarine.core.handler.IHandler;
 import org.summarine.core.util.ReflectionUtil;
@@ -64,7 +64,7 @@ public class DefaultBeanFactory implements IBeanFactory {
         if(hasAspectAnnotation(methods)) {
             Enhancer enhancer = new Enhancer();
             enhancer.setSuperclass(clazz);
-            enhancer.setCallback(new MyCallerProxy(new LoggingAspect()));
+            enhancer.setCallback(new CallerProxy(new LoggingAspect()));
             return enhancer.create();
         }
         return instance;
