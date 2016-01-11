@@ -10,6 +10,10 @@ public class MyCaller implements MethodInterceptor {
 
     private IAspect advice;
 
+    public MyCaller(IAspect advice) {
+        this.advice = advice;
+    }
+
     @Override
     public Object intercept(Object obj, Method method, Object[] args, MethodProxy proxy) throws Throwable {
         if (obj.getClass().getSuperclass().isAnnotationPresent(MyAspect.class) ||
@@ -22,7 +26,4 @@ public class MyCaller implements MethodInterceptor {
         return proxy.invokeSuper(obj, args);
     }
 
-    public void setAdvice(IAspect advice) {
-        this.advice = advice;
-    }
 }
