@@ -1,13 +1,18 @@
 package org.summarine.core.factory;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.mockito.cglib.proxy.Enhancer;
 import org.summarine.core.annotation.Inject;
+import org.summarine.core.annotation.MyAspect;
 import org.summarine.core.annotation.MyQualifier;
+import org.summarine.core.aop.IAdvice;
+import org.summarine.core.aop.MyCaller;
 import org.summarine.core.definition.BeanDefinition;
 import org.summarine.core.handler.IHandler;
 import org.summarine.core.util.ReflectionUtil;
@@ -50,7 +55,27 @@ public class DefaultBeanFactory implements IBeanFactory {
     private Object createBean(String beanName) {
         Object instance = ((BeanDefinition) beanDefinitionMap.get(beanName)).getBeanInstance();
         handleField(instance);
+        return handleAOP(instance);
+    }
+
+    private Object handleAOP(Object instance) {
+        Class<?> clazz = instance.getClass();
+        List<Method> methods = Arrays.asList(clazz.getDeclaredMethods());
+        if(hasAspectAnnotation(methods)) {
+            IAdvice advice = (IAdvice) ReflectionUtil.getInstance("org.summarine.logging.LoggingAdvice");
+            MyCaller caller = new MyCaller();
+            caller.setAdvice(advice);
+
+            Enhancer enhancer = new Enhancer();
+            enhancer.setSuperclass(clazz);
+            enhancer.setCallback(caller);
+            return enhancer.create();
+        }
         return instance;
+    }
+
+    private boolean hasAspectAnnotation(List<Method> methods) {
+        return methods.stream().anyMatch(method -> method.isAnnotationPresent(MyAspect.class));
     }
 
     private void handleField(Object instance) {
