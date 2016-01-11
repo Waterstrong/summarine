@@ -16,6 +16,7 @@ import org.summarine.core.aop.MyCaller;
 import org.summarine.core.definition.BeanDefinition;
 import org.summarine.core.handler.IHandler;
 import org.summarine.core.util.ReflectionUtil;
+import org.summarine.logging.LoggingAspect;
 
 public class DefaultBeanFactory implements IBeanFactory {
 
@@ -62,7 +63,7 @@ public class DefaultBeanFactory implements IBeanFactory {
         Class<?> clazz = instance.getClass();
         List<Method> methods = Arrays.asList(clazz.getDeclaredMethods());
         if(hasAspectAnnotation(methods)) {
-            IAspect advice = (IAspect) ReflectionUtil.getInstance("org.summarine.logging.LoggingAspect");
+            IAspect advice = new LoggingAspect();
             MyCaller caller = new MyCaller(advice);
 
             Enhancer enhancer = new Enhancer();
