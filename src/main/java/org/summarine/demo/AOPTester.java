@@ -7,7 +7,7 @@ import org.summarine.logging.LoggingAspect;
 @MyComponent
 public class AOPTester {
 
-    @MyAspect(advice = LoggingAspect.class)
+    @MyAspect(value = LoggingAspect.class)
     public void action() {
         System.out.println("Main Body: This is a test!");
     }

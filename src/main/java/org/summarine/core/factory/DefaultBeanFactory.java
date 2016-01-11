@@ -63,12 +63,9 @@ public class DefaultBeanFactory implements IBeanFactory {
         Class<?> clazz = instance.getClass();
         List<Method> methods = Arrays.asList(clazz.getDeclaredMethods());
         if(hasAspectAnnotation(methods)) {
-            IAspect advice = new LoggingAspect();
-            MyCaller caller = new MyCaller(advice);
-
             Enhancer enhancer = new Enhancer();
             enhancer.setSuperclass(clazz);
-            enhancer.setCallback(caller);
+            enhancer.setCallback(new MyCaller(new LoggingAspect()));
             return enhancer.create();
         }
         return instance;
