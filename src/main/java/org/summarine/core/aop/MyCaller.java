@@ -8,7 +8,7 @@ import org.summarine.core.annotation.MyAspect;
 
 public class MyCaller implements MethodInterceptor {
 
-    private IAdvice advice;
+    private IAspect advice;
 
     @Override
     public Object intercept(Object obj, Method method, Object[] args, MethodProxy proxy) throws Throwable {
@@ -22,7 +22,7 @@ public class MyCaller implements MethodInterceptor {
         return proxy.invokeSuper(obj, args);
     }
 
-    public void setAdvice(IAdvice advice) {
+    public void setAdvice(IAspect advice) {
         this.advice = advice;
     }
 }

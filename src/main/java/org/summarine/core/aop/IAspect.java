@@ -1,6 +1,6 @@
 package org.summarine.core.aop;
 
-public interface IAdvice {
+public interface IAspect {
     void before();
     void after();
 //    void around();

@@ -1,10 +1,9 @@
 package org.summarine.logging;
 
 
-import org.summarine.core.aop.IAdvice;
+import org.summarine.core.aop.IAspect;
 
-public class LoggingAdvice implements IAdvice {
-//    private static Logger LOGGER = Logger.getLogger(LoggingAdvice.class);
+public class LoggingAspect implements IAspect {
 
     @Override
     public void before() {

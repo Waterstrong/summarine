@@ -11,7 +11,7 @@ import org.mockito.cglib.proxy.Enhancer;
 import org.summarine.core.annotation.Inject;
 import org.summarine.core.annotation.MyAspect;
 import org.summarine.core.annotation.MyQualifier;
-import org.summarine.core.aop.IAdvice;
+import org.summarine.core.aop.IAspect;
 import org.summarine.core.aop.MyCaller;
 import org.summarine.core.definition.BeanDefinition;
 import org.summarine.core.handler.IHandler;
@@ -62,7 +62,7 @@ public class DefaultBeanFactory implements IBeanFactory {
         Class<?> clazz = instance.getClass();
         List<Method> methods = Arrays.asList(clazz.getDeclaredMethods());
         if(hasAspectAnnotation(methods)) {
-            IAdvice advice = (IAdvice) ReflectionUtil.getInstance("org.summarine.logging.LoggingAdvice");
+            IAspect advice = (IAspect) ReflectionUtil.getInstance("org.summarine.logging.LoggingAdvice");
             MyCaller caller = new MyCaller();
             caller.setAdvice(advice);
 
